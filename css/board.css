@@ -1,0 +1,76 @@
+:root {
+    --board-size: calc(min(70vw, 70vh));
+}
+
+.chessboard {
+    display: grid;
+    direction: ltr;
+    gap: 0;
+    width: var(--board-size);
+    height: var(--board-size);
+    background-color: #FFFFFF;
+}
+
+.even-square {
+    background-color: #FFFFFF;
+}
+
+.odd-square {
+    background-color: #B58863;
+}
+
+.even-square.selected {
+    background:
+        linear-gradient(#88888860, #88888860),
+        linear-gradient(#FFFFFF, #FFFFFF);
+}
+.odd-square.selected {
+    background:
+        linear-gradient(#88888860, #88888860),
+        linear-gradient(#B58863, #B58863);
+}
+.even-square.possible-move {
+    background:
+        radial-gradient(#00000030 25%, transparent 25%),
+        linear-gradient(#FFFFFF, #FFFFFF);
+}
+.odd-square.possible-move {
+    background:
+        radial-gradient(#00000030 25%, transparent 25%),
+        linear-gradient(#B58863, #B58863);
+}
+.even-square.possible-capture {
+    background:
+        radial-gradient(transparent 50%, transparent 75%, #00000030 75%),
+        linear-gradient(#FFFFFF, #FFFFFF);
+}
+.odd-square.possible-capture {
+    background:
+        radial-gradient(transparent 50%, transparent 75%, #00000030 75%),
+        linear-gradient(#B58863, #B58863);
+}
+.even-square.attacked {
+    background:
+        linear-gradient(#ff000030, #ff000030),
+        linear-gradient(#FFFFFF, #FFFFFF);
+}
+.odd-square.attacked {
+    background:
+        linear-gradient(#ff000030, #ff000030),
+        linear-gradient(#B58863, #B58863);
+}
+
+.square {
+    width: 100%;
+    height: 100%;
+}
+
+.piece {
+    width: 100%;
+    height: 100%;
+    /* background-image: url('https://images.chesscomfiles.com/chess-themes/pieces/icy_sea/150/wk.png'); */
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.2s linear;
+}
