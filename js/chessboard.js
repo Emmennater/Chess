@@ -314,7 +314,6 @@ class Piece {
                             if (promotionPiece == null) {
                                 this.piece = '';
                                 this.name = '';
-                                updatePieceElem(this);
                                 showPromotionOptions(square, (piece) => {
                                     this.promote(piece);
                                     updatePieceElem(this);
