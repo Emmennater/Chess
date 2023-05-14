@@ -106,12 +106,17 @@ class ChessBoard {
         this.resetAttackedSquares();
         removeCheckedSquare();
 
+        let kings = [];
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 const piece = this.squares[r][c].piece;
                 if (piece === null) continue;
+                if (piece.piece == 'k') { kings.push(piece); continue; }
                 piece.calculatePossibleMoves();
             }
+        }
+        for (let king of kings) {
+            king.calculatePossibleMoves();
         }
 
         // Test move issues that lead to a king being captured
@@ -232,6 +237,10 @@ class Square {
     removeAttackers() {
         this.attackers.length = 0;
         // this.elem.classList.remove("attacked");
+    }
+
+    safeForSide(side) {
+        return this.attackers.find(e => e.side != side) === undefined;
     }
 }
 
@@ -426,19 +435,22 @@ function getPossibleMoves(piece) {
             if (piece.moves != 0) break;
             let kingRook = board.getSquare(piece.square.row, board.cols - 1);
             let queenRook = board.getSquare(piece.square.row, 0);    
-            
+            let sq1, sq2, sq3;
+
             // Castling (king side)
             if (kingRook.piece != null && kingRook.piece.moves == 0 &&
-                board.getSquare(piece.square.row, board.cols - 2).piece === null &&
-                board.getSquare(piece.square.row, board.cols - 3).piece === null) {
+                (sq1 = board.getSquare(piece.square.row, board.cols - 2)).piece === null &&
+                (sq2 = board.getSquare(piece.square.row, board.cols - 3)).piece === null &&
+                sq2.safeForSide(piece.side) && piece.square.safeForSide(piece.side)) {
                     addMoveVector(0, 2);
             }
 
             // Castling (queen side)
             if (queenRook.piece != null && queenRook.piece.moves == 0 &&
-                board.getSquare(piece.square.row, 1).piece === null &&
-                board.getSquare(piece.square.row, 2).piece === null &&
-                board.getSquare(piece.square.row, 3).piece === null) {
+                (sq1 = board.getSquare(piece.square.row, 1)).piece === null &&
+                (sq2 = board.getSquare(piece.square.row, 2)).piece === null &&
+                (sq3 = board.getSquare(piece.square.row, 3)).piece === null &&
+                sq3.safeForSide(piece.side) && piece.square.safeForSide(piece.side)) {
                     addMoveVector(0, -2);
             }
 
