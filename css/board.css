@@ -9,6 +9,7 @@
     width: var(--board-size);
     height: var(--board-size);
     background-color: #FFFFFF;
+    transition: filter 0.2s;
 }
 
 .even-square {
@@ -24,36 +25,43 @@
         linear-gradient(#88888860, #88888860),
         linear-gradient(#FFFFFF, #FFFFFF);
 }
+
 .odd-square.selected {
     background:
         linear-gradient(#88888860, #88888860),
         linear-gradient(#B58863, #B58863);
 }
+
 .even-square.possible-move {
     background:
-        radial-gradient(#00000030 25%, transparent 25%),
+        radial-gradient(#00000030 25%, transparent calc(25% + 1px)),
         linear-gradient(#FFFFFF, #FFFFFF);
 }
+
 .odd-square.possible-move {
     background:
-        radial-gradient(#00000030 25%, transparent 25%),
+        radial-gradient(#00000030 25%, transparent calc(25% + 1px)),
         linear-gradient(#B58863, #B58863);
 }
+
 .even-square.possible-capture {
     background:
-        radial-gradient(transparent 50%, transparent 75%, #00000030 75%),
+        radial-gradient(transparent calc(75% - 1px), #00000030 75%),
         linear-gradient(#FFFFFF, #FFFFFF);
 }
+
 .odd-square.possible-capture {
     background:
-        radial-gradient(transparent 50%, transparent 75%, #00000030 75%),
+        radial-gradient(transparent calc(75% - 1px), #00000030 75%),
         linear-gradient(#B58863, #B58863);
 }
+
 .even-square.attacked {
     background:
         linear-gradient(#ff000030, #ff000030),
         linear-gradient(#FFFFFF, #FFFFFF);
 }
+
 .odd-square.attacked {
     background:
         linear-gradient(#ff000030, #ff000030),
@@ -73,4 +81,67 @@
     background-position: center;
     cursor: pointer;
     transition: transform 0.2s linear;
+}
+
+@property --x {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0.0;
+}
+
+.promotion-wrapper {
+    display: none;
+    position: absolute;
+    background: radial-gradient(
+        rgb(
+            calc(220 * (1.0 - var(--x)) + 220 * var(--x)),
+            calc(220 * (1.0 - var(--x)) + 180 * var(--x)),
+            calc(220 * (1.0 - var(--x)) + 170 * var(--x))
+        ),
+        rgb(
+            calc(120 * (1.0 - var(--x)) + 207 * var(--x)),
+            calc(120 * (1.0 - var(--x)) + 89 * var(--x)),
+            calc(120 * (1.0 - var(--x)) + 25 * var(--x))
+        ) calc(var(--x) * 31% + 69%),
+        transparent calc(var(--x) * 31% + 69% + 1px)
+    );
+    cursor: pointer;
+    animation: colorChangeOut 0.15s ease forwards; /* Animation for when not hovered */
+}
+
+.promotion-wrapper:hover {
+    animation: colorChangeIn 0.15s ease forwards; /* Animation for when hovered */
+}
+
+@keyframes colorChangeIn {
+    from {
+        --x: 0.0;
+    }
+    to {
+        --x: 1.0;
+    }
+}
+
+@keyframes colorChangeOut {
+    from {
+        --x: 1.0;
+    }
+    to {
+        --x: 0.0;
+    }
+}
+
+.promotion {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+
+    transform: scale(0.8);
+    transition: transform 0.15s;
+}
+
+.promotion-wrapper:hover .promotion {
+    transform: scale(1.0);
 }

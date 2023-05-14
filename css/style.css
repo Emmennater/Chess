@@ -7,3 +7,8 @@ html, body {
     margin: 0;
     background-color: black;
 }
+
+.dim {
+    filter: brightness(0.3);
+    pointer-events: none;
+}

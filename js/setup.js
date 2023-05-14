@@ -75,7 +75,8 @@ function updateChessboardElem(chessboard) {
 }
 
 function updatePieceElem(piece) {
-    piece.square.elem.children[0].setAttribute("style", `background-image: url(${getPieceSrcUrl(piece.name)});`);
+    if (piece.name == '') piece.square.elem.children[0].setAttribute("style", `background-image: none;`);
+    else piece.square.elem.children[0].setAttribute("style", `background-image: url(${getPieceSrcUrl(piece.name)});`);
 }
 
 function setupListeners(chessboard) {
@@ -128,7 +129,6 @@ function loop(timestamp) {
 (function start() {
     chessboard = new ChessBoard(8, 8);
     chessboard.loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-    // loadFen(chessboard, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 
     requestAnimationFrame(loop);
 })();

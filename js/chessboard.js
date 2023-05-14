@@ -263,10 +263,9 @@ class Piece {
         return this.possibleMoves;
     }
 
-    promote() {
-        if (this.piece != 'p') return;
-        this.name = this.side == 'w' ? 'q' : 'Q';
-        this.piece = 'q';
+    promote(piece = 'q') {
+        this.name = this.side == 'w' ? piece : piece.toUpperCase();
+        this.piece = piece;
     }
 
     canMoveTo(square) {
@@ -276,7 +275,7 @@ class Piece {
         return true;
     }
 
-    moveTo(square, updateElems = true) {
+    moveTo(square, updateElems = true, promotionPiece = null) {
         if (square == this.square) return 1;
         if (square.piece !== null && square.piece.side == this.side) return 2;
 
@@ -286,8 +285,10 @@ class Piece {
         // this.calculatePossibleMoves();
         if (!this.canMoveTo(square)) return 0;
         let callback = () => {};
+        let promoting = false;
 
         // En passant and prompotion for pawns
+        // (this code is so cursed xD)
         if (this.piece == 'p') {
             // Check if double move
             let distance = Math.abs(square.row - this.square.row);
@@ -308,9 +309,23 @@ class Piece {
                     let promoRank = this.side == 'w' ? board.rows - 1 : 0;
                     if (square.row == promoRank) {
                         // Promote the pawn
-                        this.promote();
-                        callback = () => {
-                            updatePieceElem(this);
+                        promoting = true;
+                        if (updateElems) {
+                            if (promotionPiece == null) {
+                                this.piece = '';
+                                this.name = '';
+                                updatePieceElem(this);
+                                showPromotionOptions(square, (piece) => {
+                                    this.promote(piece);
+                                    updatePieceElem(this);
+                                    board.calculateAllAttacks();
+                                });
+                            }
+                            callback = () => {
+                                updatePieceElem(this);
+                            }
+                        } else {
+                            this.promote(promotionPiece ? promotionPiece : 'q');
                         }
                     }
                 }
@@ -360,7 +375,8 @@ class Piece {
         movePieceElem(oldSquare.elem.children[0], oldSquare.elem, this.square.elem, callback);
 
         // Calculate next attacked squares
-        board.calculateAllAttacks();
+        if (!promoting || promotionPiece !== null)
+            board.calculateAllAttacks();
 
         return true;
     }

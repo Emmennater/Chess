@@ -65,3 +65,46 @@ function movePieceElem(pieceElem, fromSquareElem, toSquareElem, callback = () =>
     };
     animationQueue.push(new CustomAnimation(0.22, lerpFun, onComplete));
 }
+
+function showPromotionOptions(square, callback) {
+    const promoPieces = "qnrb";
+    
+    // Dim the board
+    let boardElem = square.board.boardElem;
+    boardElem.classList.add("dim");
+    let rect = square.elem.getClientRects()[0];
+
+    let promoteElems = document.getElementsByClassName("promotion-wrapper");
+    
+    for (let i = 0; i < promoPieces.length; i++) {
+        let promotePiece = promoPieces[i];
+        let promoteElem = promoteElems[0];
+        let promoteWrapper = promoteElem;
+        promoteWrapper.setAttribute("class", "promotion-wrapper");
+        promoteWrapper.setAttribute("style", `
+        display: block;
+        width: ${rect.width}px;
+        height: ${rect.height}px;
+        left: ${rect.left}px;
+        top: ${rect.top + rect.height * i}px;
+        `);
+
+        let promoteTile = promoteElem.children[0];
+        promoteTile.setAttribute("class", "promotion");
+        promoteTile.setAttribute("style", `
+        background-image: url(${getPieceSrcUrl(promotePiece)});
+        `);
+
+        // Select promotion option
+        promoteWrapper.addEventListener("mousedown", () => {
+            for (let promoElem of promoteElems) {
+                promoElem.setAttribute("style", "display:none");
+            }
+            boardElem.classList.remove("dim");
+            callback(promotePiece);
+        });
+
+        promoteWrapper.appendChild(promoteTile);
+        document.body.appendChild(promoteWrapper);
+    }
+}
