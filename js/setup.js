@@ -78,7 +78,8 @@ function updateChessboardElem(chessboard) {
 function updatePieceElem(piece) {
     if (!piece) return;
     if (piece.name == '') piece.square.elem.children[0].setAttribute("style", `background-image: none;`);
-    else piece.square.elem.children[0].setAttribute("style", `background-image: url(${getPieceSrcUrl(piece.name)});`);
+    else if (piece.square.elem.children[0])
+        piece.square.elem.children[0].setAttribute("style", `background-image: url(${getPieceSrcUrl(piece.name)});`);
 }
 
 function setupListeners(chessboard) {

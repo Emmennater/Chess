@@ -113,13 +113,13 @@ function squareHovered(square) {
         if (pressed !== square) {
             // Move piece
             if (pressed && square) {
-                let success = pressed.piece.moveTo(square, true, null, true);
-                updatePieceElem(square.piece);
                 if (selectedSquare) {
                     selectedSquare.elem.classList.remove("selected");
                     deselectSquare();
                 }
-                if (success != 2) return;
+                updatePieceElem(square.piece);
+                let success = pressed.piece.moveTo(square, true, null, true);
+                chessboard.updateChecks(); // checks calculated after attacks calculated so do it again (bad)
             }
         }
     }
