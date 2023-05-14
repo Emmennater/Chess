@@ -316,7 +316,7 @@ class Piece {
                             if (promotionPiece == null) {
                                 this.piece = '';
                                 this.name = '';
-                                showPromotionOptions(square, (piece) => {
+                                showPromotionOptions(square, this, (piece) => {
                                     this.promote(piece);
                                     updatePieceElem(this);
                                     board.calculateAllAttacks();

@@ -63,12 +63,12 @@ function movePieceElem(pieceElem, fromSquareElem, toSquareElem, callback = () =>
         toSquareElem.innerHTML = '';
         toSquareElem.appendChild(pieceElem);
         callback();
-        chessboard.updateChecks()
+        chessboard.updateChecks();
     };
     animationQueue.push(new CustomAnimation(0.22, lerpFun, onComplete));
 }
 
-function showPromotionOptions(square, callback) {
+function showPromotionOptions(square, piece, callback) {
     const promoPieces = "qnrb";
     
     // Dim the board
@@ -82,19 +82,24 @@ function showPromotionOptions(square, callback) {
         let promotePiece = promoPieces[i];
         let promoteElem = promoteElems[0];
         let promoteWrapper = promoteElem;
+
+        // Black or white promotion
+        let promoteName = piece.side == 'w' ? promotePiece : promotePiece.toUpperCase();
+        let listDirection = piece.side == 'w' ? 1 : -1;
+
         promoteWrapper.setAttribute("class", "promotion-wrapper");
         promoteWrapper.setAttribute("style", `
         display: block;
         width: ${rect.width}px;
         height: ${rect.height}px;
         left: ${rect.left}px;
-        top: ${rect.top + rect.height * i}px;
+        top: ${rect.top + rect.height * i * listDirection}px;
         `);
 
         let promoteTile = promoteElem.children[0];
         promoteTile.setAttribute("class", "promotion");
         promoteTile.setAttribute("style", `
-        background-image: url(${getPieceSrcUrl(promotePiece)});
+        background-image: url(${getPieceSrcUrl(promoteName)});
         `);
 
         // Select promotion option
@@ -104,6 +109,7 @@ function showPromotionOptions(square, callback) {
             }
             boardElem.classList.remove("dim");
             callback(promotePiece);
+            chessboard.updateChecks();
         });
 
         promoteWrapper.appendChild(promoteTile);
