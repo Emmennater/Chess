@@ -123,6 +123,8 @@
     );
     cursor: pointer;
     animation: colorChangeOut 0.15s ease forwards; /* Animation for when not hovered */
+
+    user-select: none;
 }
 
 .promotion-wrapper:hover {
@@ -156,6 +158,9 @@
 
     transform: scale(0.8);
     transition: transform 0.15s;
+
+    user-select: none;
+    pointer-events: none;
 }
 
 .promotion-wrapper:hover .promotion {

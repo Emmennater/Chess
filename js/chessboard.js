@@ -286,7 +286,7 @@ class Piece {
         return true;
     }
 
-    moveTo(square, updateElems = true, promotionPiece = null) {
+    moveTo(square, updateElems = true, promotionPiece = null, instant = false) {
         if (square == this.square) return 1;
         if (square.piece !== null && square.piece.side == this.side) return 2;
 
@@ -382,7 +382,7 @@ class Piece {
 
         if (!updateElems) return;
 
-        movePieceElem(oldSquare.elem.children[0], oldSquare.elem, this.square.elem, callback);
+        movePieceElem(oldSquare.elem.children[0], oldSquare.elem, this.square.elem, callback, instant);
 
         // Calculate next attacked squares
         if (!promoting || promotionPiece !== null)

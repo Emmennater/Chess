@@ -1,7 +1,12 @@
 
+let hoveredSquare = null;
+let pressedSquare = null;
 let selectedSquare = null;
 let checkedSquare = null;
 let justSelected = false;
+let justPressed = false;
+let moveToNextHovered = false;
+let pressedOldStyle = "";
 let possibleMoveSquares = [];
 
 function initListeners() {
@@ -15,6 +20,37 @@ function initListeners() {
             deselectSquare();
         }
     });
+    document.addEventListener("mouseup", () => {
+        if (pressedSquare !== null && pressedOldStyle != "") {
+            pressedSquare.elem.children[0].setAttribute("style", pressedOldStyle);
+            pressedOldStyle = "";
+        }
+
+        moveToNextHovered = pressedSquare;
+        pressedSquare = null;
+    })
+    document.addEventListener("mousemove", (e) => {
+        if (pressedSquare === null) return;
+        if (!pressedSquare.elem.children[0]) return;
+        if (pressedOldStyle == "") pressedOldStyle = pressedSquare.elem.children[0].getAttribute("style");
+
+        // Set location of piece to mouse location
+        let rect = pressedSquare.elem.getClientRects()[0];
+        let pieceElem = pressedSquare.elem.children[0];
+        pieceElem.setAttribute("style", `
+        ${pressedOldStyle};
+        position: absolute;
+        width: ${rect.width}px;
+        height: ${rect.height}px;
+        left: ${e.clientX - rect.width / 2}px;
+        top: ${e.clientY - rect.height / 2}px;
+        `);
+
+    });
+    document.addEventListener('dragstart', function(event) {
+        // Disable not-allowed sign when dragging
+        event.preventDefault();
+    });
 }
 
 function squareClicked(square) {
@@ -22,16 +58,26 @@ function squareClicked(square) {
     justSelected = true;
 
     // Move piece
+    let success = false;
     if (selectedSquare) {
-        let success = selectedSquare.piece.moveTo(square);
+        success = selectedSquare.piece.moveTo(square);
+        if (success === 1) {
+            // Same square clicked
+            if (square.piece !== null) {
+                pressedSquare = square;
+            }
+            return;
+        }
         selectedSquare.elem.classList.remove("selected");
         deselectSquare();
-        if (success != 2) return;
     }
     
     // Only select squares with pieces on them
     if (square.piece === null) return;
     
+    if (success !== true) pressedSquare = square;
+    if (selectedSquare !== square) justPressed = true;
+
     // Set the elem to selected
     deselectSquare();
     selectedSquare = square;
@@ -47,6 +93,38 @@ function squareClicked(square) {
     }
 }
 
+function squareReleased(square) {
+    if (justPressed) {
+        justPressed = false;
+        return;
+    }
+    if (selectedSquare) {
+        selectedSquare.elem.classList.remove("selected");
+        deselectSquare();
+    }
+}
+
+function squareHovered(square) {
+    hoveredSquare = square;
+
+    if (moveToNextHovered) {
+        let pressed = moveToNextHovered;
+        moveToNextHovered = false;
+        if (pressed !== square) {
+            // Move piece
+            if (pressed && square) {
+                let success = pressed.piece.moveTo(square, true, null, true);
+                updatePieceElem(square.piece);
+                if (selectedSquare) {
+                    selectedSquare.elem.classList.remove("selected");
+                    deselectSquare();
+                }
+                if (success != 2) return;
+            }
+        }
+    }
+}
+
 function deselectSquare() {
     for (let move of possibleMoveSquares) {
         if (move === null) continue;
@@ -57,7 +135,7 @@ function deselectSquare() {
     selectedSquare = null;
 }
 
-function movePieceElem(pieceElem, fromSquareElem, toSquareElem, callback = () => {}) {
+function movePieceElem(pieceElem, fromSquareElem, toSquareElem, callback = () => {}, instant = false) {
     // Schedule animation
     let fromRect = fromSquareElem.getClientRects()[0];
     let toRect = toSquareElem.getClientRects()[0];
@@ -80,7 +158,9 @@ function movePieceElem(pieceElem, fromSquareElem, toSquareElem, callback = () =>
         callback();
         chessboard.updateChecks();
     };
-    animationQueue.push(new CustomAnimation(0.22, lerpFun, onComplete));
+
+    if (instant) onComplete();
+    else animationQueue.push(new CustomAnimation(0.22, lerpFun, onComplete));
 }
 
 function showPromotionOptions(square, piece, callback) {

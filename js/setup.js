@@ -64,6 +64,7 @@ function updateChessboardElem(chessboard) {
             if (!pieceElem) {
                 pieceElem = document.createElement("div");
                 pieceElem.setAttribute("class", "piece");
+                pieceElem.setAttribute("draggable", "false");
                 squareElem.appendChild(pieceElem);
             }
 
@@ -75,6 +76,7 @@ function updateChessboardElem(chessboard) {
 }
 
 function updatePieceElem(piece) {
+    if (!piece) return;
     if (piece.name == '') piece.square.elem.children[0].setAttribute("style", `background-image: none;`);
     else piece.square.elem.children[0].setAttribute("style", `background-image: url(${getPieceSrcUrl(piece.name)});`);
 }
@@ -89,6 +91,9 @@ function setupListeners(chessboard) {
 
             square.elem = squareElem;
             squareElem.addEventListener("mousedown", () => squareClicked(square));
+            squareElem.addEventListener("mouseup", () => { squareReleased(square); });
+            squareElem.addEventListener("mouseover", () => { squareHovered(square); });
+            squareElem.addEventListener("mouseout", () => { if (hoveredSquare == square) hoveredSquare = null; });
         }
     }
 }
@@ -106,6 +111,7 @@ function setupBoard(rows, cols) {
         for (let c = 0; c < cols; c++) {
             let square = document.createElement("div");
             square.setAttribute("class", "square");
+            square.setAttribute("draggable", "false");
 
             // Odd and even squares
             square.classList.add((r + c) % 2 ? "even-square" : "odd-square");
@@ -121,6 +127,7 @@ let previousTimestamp = performance.now();
 function loop(timestamp) {
     const deltaTime = (timestamp - previousTimestamp) / 1000; // Convert to seconds
     previousTimestamp = timestamp;
+    moveToNextHovered = false;
 
     updateAnimations(deltaTime);
     requestAnimationFrame(loop);
