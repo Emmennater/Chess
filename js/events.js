@@ -1,5 +1,6 @@
 
 let selectedSquare = null;
+let checkedSquare = null;
 let possibleMoveSquares = [];
 
 function squareClicked(square) {
@@ -107,4 +108,15 @@ function showPromotionOptions(square, callback) {
         promoteWrapper.appendChild(promoteTile);
         document.body.appendChild(promoteWrapper);
     }
+}
+
+function setCheckedSquare(square) {
+    checkedSquare = square;
+    checkedSquare.elem.classList.add("check");
+}
+
+function removeCheckedSquare() {
+    if (checkedSquare === null) return;
+    checkedSquare.elem.classList.remove("check");
+    checkedSquare = null;
 }

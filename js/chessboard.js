@@ -92,25 +92,25 @@ class ChessBoard {
         // Kings are calculated last
         let kings = [];
         let kingAttacked = null;
+        removeCheckedSquare();
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 const piece = this.squares[r][c].piece;
                 if (piece === null) continue;
-                // if (piece.piece == 'k') { kings.push(piece); continue; }
+                if (piece.piece == 'k') kings.push(piece);
                 piece.calculatePossibleMoves();
             }
         }
 
-        // for (let king of kings) {
-        //     // Check
-        //     let opposingAttackers = king.square.attackers.find(e => e.side != king.side)
-        //     if (opposingAttackers !== undefined) {
-        //         kingAttacked = king;
-        //     }
-
-        //     king.calculatePossibleMoves();
-        // }
+        for (let king of kings) {
+            // Check
+            let opposingAttackers = king.square.attackers.find(e => e.side != king.side)
+            if (opposingAttackers !== undefined) {
+                kingAttacked = king;
+                setCheckedSquare(king.square);
+            }
+        }
 
         // Test move issues that lead to a king being captured
         let sideToMove = this.turn == 0 ? 'w' : 'b';

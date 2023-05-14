@@ -1,5 +1,9 @@
 :root {
     --board-size: calc(min(70vw, 70vh));
+    /* --odd-color: #B58863; */ /* omg the AI actually got the right board color wtf??? */
+    /* --even-color: #FFFFFF; */
+    --odd-color: #B58863;
+    --even-color: #F0D9B5;
 }
 
 .chessboard {
@@ -13,59 +17,71 @@
 }
 
 .even-square {
-    background-color: #FFFFFF;
+    background-color: var(--even-color);
 }
 
 .odd-square {
-    background-color: #B58863;
+    background-color: var(--odd-color);
 }
 
 .even-square.selected {
     background:
         linear-gradient(#88888860, #88888860),
-        linear-gradient(#FFFFFF, #FFFFFF);
+        linear-gradient(var(--even-color), var(--even-color));
 }
 
 .odd-square.selected {
     background:
         linear-gradient(#88888860, #88888860),
-        linear-gradient(#B58863, #B58863);
+        linear-gradient(var(--odd-color), var(--odd-color));
 }
 
 .even-square.possible-move {
     background:
         radial-gradient(#00000030 25%, transparent calc(25% + 1px)),
-        linear-gradient(#FFFFFF, #FFFFFF);
+        linear-gradient(var(--even-color), var(--even-color));
 }
 
 .odd-square.possible-move {
     background:
         radial-gradient(#00000030 25%, transparent calc(25% + 1px)),
-        linear-gradient(#B58863, #B58863);
+        linear-gradient(var(--odd-color), var(--odd-color));
 }
 
 .even-square.possible-capture {
     background:
         radial-gradient(transparent calc(75% - 1px), #00000030 75%),
-        linear-gradient(#FFFFFF, #FFFFFF);
+        linear-gradient(var(--even-color), var(--even-color));
 }
 
 .odd-square.possible-capture {
     background:
         radial-gradient(transparent calc(75% - 1px), #00000030 75%),
-        linear-gradient(#B58863, #B58863);
+        linear-gradient(var(--odd-color), var(--odd-color));
 }
 
 .even-square.attacked {
     background:
         linear-gradient(#ff000030, #ff000030),
-        linear-gradient(#FFFFFF, #FFFFFF);
+        linear-gradient(var(--even-color), var(--even-color));
 }
 
 .odd-square.attacked {
     background:
         linear-gradient(#ff000030, #ff000030),
-        linear-gradient(#B58863, #B58863);
+        linear-gradient(var(--odd-color), var(--odd-color));
+}
+
+.even-square.check {
+    background:
+        radial-gradient(ellipse at center, rgb(255, 0, 0) 0%, rgb(231, 0, 0) 25%, rgba(169, 0, 0, 0) 89%, rgba(158, 0, 0, 0) 100%),
+        linear-gradient(var(--even-color), var(--even-color));
+}
+
+.odd-square.check {
+    background:
+        radial-gradient(ellipse at center, rgb(255, 0, 0) 0%, rgb(231, 0, 0) 25%, rgba(169, 0, 0, 0) 89%, rgba(158, 0, 0, 0) 100%),
+        linear-gradient(var(--odd-color), var(--odd-color));
 }
 
 .square {
