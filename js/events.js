@@ -102,15 +102,15 @@ function showPromotionOptions(square, piece, callback) {
         background-image: url(${getPieceSrcUrl(promoteName)});
         `);
 
-        // Select promotion option
-        promoteWrapper.addEventListener("mousedown", () => {
+        // Select promotion option (dont add more than one of these!)
+        promoteWrapper.onclick = () => {
             for (let promoElem of promoteElems) {
                 promoElem.setAttribute("style", "display:none");
             }
             boardElem.classList.remove("dim");
             callback(promotePiece);
             chessboard.updateChecks();
-        });
+        };
 
         promoteWrapper.appendChild(promoteTile);
         document.body.appendChild(promoteWrapper);

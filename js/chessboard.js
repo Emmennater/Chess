@@ -249,7 +249,7 @@ class Piece {
     calculatePossibleMoves() {
         // Check if on the right turn
         let sideToMove = this.square.board.turn == 0 ? 'w' : 'b';
-        let possibleMoves;
+        let possibleMoves = [];
 
         if (this.lastUpdated != this.square.board.moves) {
             this.lastUpdated = this.square.board.moves;
