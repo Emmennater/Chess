@@ -86,29 +86,31 @@ class ChessBoard {
         
     }
 
+    updateChecks() {
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const piece = this.squares[r][c].piece;
+                if (piece === null) continue;
+                if (piece.piece != 'k') continue;
+
+                // Find attacks on king
+                let opposingAttackers = piece.square.attackers.find(e => e.side != piece.side)
+                if (opposingAttackers !== undefined) {
+                    setCheckedSquare(piece.square);
+                }
+            }
+        }
+    }
+
     calculateAllAttacks() {
         this.resetAttackedSquares();
-
-        // Kings are calculated last
-        let kings = [];
-        let kingAttacked = null;
         removeCheckedSquare();
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 const piece = this.squares[r][c].piece;
                 if (piece === null) continue;
-                if (piece.piece == 'k') kings.push(piece);
                 piece.calculatePossibleMoves();
-            }
-        }
-
-        for (let king of kings) {
-            // Check
-            let opposingAttackers = king.square.attackers.find(e => e.side != king.side)
-            if (opposingAttackers !== undefined) {
-                kingAttacked = king;
-                setCheckedSquare(king.square);
             }
         }
 

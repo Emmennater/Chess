@@ -63,6 +63,7 @@ function movePieceElem(pieceElem, fromSquareElem, toSquareElem, callback = () =>
         toSquareElem.innerHTML = '';
         toSquareElem.appendChild(pieceElem);
         callback();
+        chessboard.updateChecks()
     };
     animationQueue.push(new CustomAnimation(0.22, lerpFun, onComplete));
 }
