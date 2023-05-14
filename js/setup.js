@@ -127,6 +127,8 @@ function loop(timestamp) {
 }
 
 (function start() {
+    initListeners();
+
     chessboard = new ChessBoard(8, 8);
     chessboard.loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 

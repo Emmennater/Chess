@@ -1,10 +1,25 @@
 
 let selectedSquare = null;
 let checkedSquare = null;
+let justSelected = false;
 let possibleMoveSquares = [];
+
+function initListeners() {
+    document.addEventListener("mousedown", () => {
+        if (justSelected) {
+            justSelected = false;
+            return;
+        }
+        if (selectedSquare) {
+            selectedSquare.elem.classList.remove("selected");
+            deselectSquare();
+        }
+    });
+}
 
 function squareClicked(square) {
     if (!square.elem) return;
+    justSelected = true;
 
     // Move piece
     if (selectedSquare) {
