@@ -500,7 +500,8 @@ function getPossibleMoves(piece) {
             }
             
             // Double move
-            if (piece.square.row == startRank && board.getSquare(piece.square.row + direction * 2, piece.square.col).piece === null) {
+            if (piece.square.row == startRank && board.getSquare(piece.square.row + direction * 2, piece.square.col).piece === null &&
+                board.getSquare(piece.square.row + direction, piece.square.col).piece === null) {
                 addMoveVector(direction * 2, 0, 1, false);
             }
 
